@@ -1907,15 +1907,7 @@ namespace Private {
     let copy = toArray(items);
 
     if (state.key === 'last_modified') {
-      // Sort by type and then by last modified.
       copy.sort((a, b) => {
-        // Compare based on type.
-        let t1 = typeWeight(a);
-        let t2 = typeWeight(b);
-        if (t1 !== t2) {
-          return t1 < t2 ? -1 : 1; // Infinity safe
-        }
-
         let valA = new Date(a.last_modified).getTime();
         let valB = new Date(b.last_modified).getTime();
 
@@ -1925,15 +1917,7 @@ namespace Private {
         return valB - valA;
       });
     } else {
-      // Sort by type and then by name.
       copy.sort((a, b) => {
-        // Compare based on type.
-        let t1 = typeWeight(a);
-        let t2 = typeWeight(b);
-        if (t1 !== t2) {
-          return t1 < t2 ? -1 : 1; // Infinity safe
-        }
-
         // Compare by display name.
         if (state.direction === 'descending') {
           return b.name.localeCompare(a.name);
@@ -1956,21 +1940,5 @@ namespace Private {
     return ArrayExt.findFirstIndex(nodes, node =>
       ElementExt.hitTest(node, x, y)
     );
-  }
-
-  /**
-   * Weight a contents model by type.
-   */
-  function typeWeight(model: Contents.IModel): number {
-    switch (model.type) {
-      case 'directory':
-        return 0;
-      case 'notebook':
-        return 1;
-      case 'file':
-        return 2;
-      default:
-        return Infinity;
-    }
   }
 }
